@@ -1,22 +1,26 @@
-from app.schemas.actor import ActorOut, ActorSummaryOut
+from app.schemas.actor import ActorDetail, ActorFilters, ActorRead
 from app.schemas.common import PaginationParams
-from app.schemas.director import DirectorOut
+from app.schemas.director import DirectorDetail, DirectorFilters, DirectorRead
 from app.schemas.envelope import Envelope, ErrorPayload, Meta, PaginationMeta
-from app.schemas.genre import GenreOut
-from app.schemas.movie import MovieDetailOut, MovieListItemOut
-from app.schemas.review import ReviewOut
+from app.schemas.genre import GenreRead
+from app.schemas.movie import MovieDetail, MovieFilters, MovieRead
+from app.schemas.review import ReviewRead
 
 __all__ = [
-    "ActorOut",
-    "ActorSummaryOut",
-    "DirectorOut",
+    "ActorDetail",
+    "ActorFilters",
+    "ActorRead",
+    "DirectorDetail",
+    "DirectorFilters",
+    "DirectorRead",
     "Envelope",
     "ErrorPayload",
-    "GenreOut",
+    "GenreRead",
     "Meta",
-    "MovieDetailOut",
-    "MovieListItemOut",
+    "MovieDetail",
+    "MovieFilters",
+    "MovieRead",
     "PaginationMeta",
     "PaginationParams",
-    "ReviewOut",
+    "ReviewRead",
 ]
