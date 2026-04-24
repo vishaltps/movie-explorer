@@ -2,6 +2,9 @@ FROM node:20-alpine AS build
 
 WORKDIR /app
 
+# Disable Husky git-hook installation in Docker (no .git dir in build context)
+ENV HUSKY=0
+
 COPY package.json package-lock.json ./
 RUN npm ci
 
