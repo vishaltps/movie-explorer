@@ -2,6 +2,12 @@
 
 A full-stack movie catalog built with FastAPI and React. Browse and filter movies, actors, directors, and genres. Favorites are saved to local storage.
 
+## Screenshots
+
+![Homepage](./screenshots/homepage.png)
+![Movie Details](./screenshots/movie_details.png)
+![Directors](./screenshots/directors.png)
+
 ## Stack
 
 - **Backend:** FastAPI, SQLAlchemy, Alembic, SQLite, pytest
