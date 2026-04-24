@@ -29,6 +29,11 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "UP", "B", "SIM", "RUF"]
+ignore = ["B008"]
+
+[tool.ruff.lint.per-file-ignores]
+"app/seed.py" = ["E501"]
+"alembic/versions/*.py" = ["E501", "I001", "UP007", "UP035"]
 
 [tool.mypy]
 python_version = "3.12"

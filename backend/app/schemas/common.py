@@ -1,4 +1,5 @@
 """Shared pagination schemas."""
+
 from pydantic import BaseModel, Field
 
 

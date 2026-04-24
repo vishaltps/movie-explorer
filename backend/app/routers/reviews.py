@@ -1,4 +1,5 @@
 """Reviews endpoint — nested under /movies/{movie_id}/reviews."""
+
 from fastapi import APIRouter, Depends, Query, Request
 from sqlalchemy.orm import Session
 
@@ -20,6 +21,14 @@ def list_reviews(
     page_size: int = Query(default=20, ge=1, le=100),
     db: Session = Depends(get_db),
 ) -> Envelope[list[ReviewRead]]:
-    items, pagination = service.list_for_movie(db, movie_id=movie_id, page=page, page_size=page_size)
-    return ok([ReviewRead.model_validate(r) for r in items], pagination=pagination,
-              request_id=getattr(request.state, "request_id", None))
+    items, pagination = service.list_for_movie(
+        db,
+        movie_id=movie_id,
+        page=page,
+        page_size=page_size,
+    )
+    return ok(
+        [ReviewRead.model_validate(r) for r in items],
+        pagination=pagination,
+        request_id=getattr(request.state, "request_id", None),
+    )

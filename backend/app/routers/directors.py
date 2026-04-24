@@ -1,4 +1,5 @@
 """Director endpoints."""
+
 from fastapi import APIRouter, Depends, Query, Request
 from sqlalchemy.orm import Session
 
@@ -20,17 +21,30 @@ def list_directors(
     db: Session = Depends(get_db),
 ) -> Envelope[list[DirectorRead]]:
     items, pagination = service.list(db, filters)
-    return ok([DirectorRead.model_validate(d) for d in items], pagination=pagination,
-              request_id=getattr(request.state, "request_id", None))
+    return ok(
+        [DirectorRead.model_validate(d) for d in items],
+        pagination=pagination,
+        request_id=getattr(request.state, "request_id", None),
+    )
 
 
 @router.get("/{director_id}", response_model=Envelope[DirectorDetail], summary="Get director by ID")
-def get_director(director_id: int, request: Request, db: Session = Depends(get_db)) -> Envelope[DirectorDetail]:
-    return ok(DirectorDetail.model_validate(service.get_by_id(db, director_id)),
-              request_id=getattr(request.state, "request_id", None))
+def get_director(
+    director_id: int,
+    request: Request,
+    db: Session = Depends(get_db),
+) -> Envelope[DirectorDetail]:
+    return ok(
+        DirectorDetail.model_validate(service.get_by_id(db, director_id)),
+        request_id=getattr(request.state, "request_id", None),
+    )
 
 
-@router.get("/{director_id}/movies", response_model=Envelope[list[MovieRead]], summary="Movies by director")
+@router.get(
+    "/{director_id}/movies",
+    response_model=Envelope[list[MovieRead]],
+    summary="Movies by director",
+)
 def list_director_movies(
     director_id: int,
     request: Request,
@@ -39,5 +53,8 @@ def list_director_movies(
     db: Session = Depends(get_db),
 ) -> Envelope[list[MovieRead]]:
     items, pagination = service.get_director_movies(db, director_id, page, page_size)
-    return ok([MovieRead.model_validate(m) for m in items], pagination=pagination,
-              request_id=getattr(request.state, "request_id", None))
+    return ok(
+        [MovieRead.model_validate(m) for m in items],
+        pagination=pagination,
+        request_id=getattr(request.state, "request_id", None),
+    )

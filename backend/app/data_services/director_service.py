@@ -1,5 +1,8 @@
 """Director data service."""
+
 from __future__ import annotations
+
+import builtins
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -23,7 +26,7 @@ class DirectorService(BaseService[Director]):
 
     def get_director_movies(
         self, db: Session, director_id: int, page: int, page_size: int
-    ) -> tuple[list[Movie], PaginationMeta]:
+    ) -> tuple[builtins.list[Movie], PaginationMeta]:
         self.get_by_id(db, director_id)  # raises NotFoundError if missing
         stmt = (
             select(Movie)
@@ -31,4 +34,5 @@ class DirectorService(BaseService[Director]):
             .order_by(Movie.release_year.desc())
         )
         from app.data_services.base import paginate as standalone_paginate
+
         return standalone_paginate(db, stmt, page, page_size)

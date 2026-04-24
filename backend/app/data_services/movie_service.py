@@ -1,4 +1,5 @@
 """Movie data service — list with composable filters, detail with eager loading."""
+
 from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
 

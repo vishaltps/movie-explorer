@@ -1,4 +1,5 @@
 """Health check endpoint — Docker readiness probe."""
+
 from fastapi import APIRouter, Request
 
 from app.data_services.base import ok

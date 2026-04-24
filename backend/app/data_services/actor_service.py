@@ -1,5 +1,8 @@
 """Actor data service — list with filters including the actors-by-genre join."""
+
 from __future__ import annotations
+
+import builtins
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -31,9 +34,10 @@ class ActorService(BaseService[Actor]):
 
     def get_actor_movies(
         self, db: Session, actor_id: int, page: int, page_size: int
-    ) -> tuple[list[Movie], PaginationMeta]:
+    ) -> tuple[builtins.list[Movie], PaginationMeta]:
         self.get_by_id(db, actor_id)  # raises NotFoundError if missing
         from sqlalchemy import select as sa_select
+
         stmt = (
             sa_select(Movie)
             .join(Movie.actors)
@@ -41,4 +45,5 @@ class ActorService(BaseService[Actor]):
             .order_by(Movie.release_year.desc())
         )
         from app.data_services.base import paginate as standalone_paginate
+
         return standalone_paginate(db, stmt, page, page_size)

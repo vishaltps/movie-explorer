@@ -1,7 +1,7 @@
-from collections.abc import AsyncGenerator
+from collections.abc import AsyncGenerator, Awaitable, Callable
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, Response
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
@@ -68,6 +68,24 @@ app.add_exception_handler(AppError, app_error_handler)
 app.add_exception_handler(RequestValidationError, validation_error_handler)
 app.add_exception_handler(StarletteHTTPException, http_exception_handler)
 app.add_exception_handler(Exception, generic_exception_handler)
+
+
+@app.middleware("http")
+async def add_cache_headers(
+    request: Request,
+    call_next: Callable[[Request], Awaitable[Response]],
+) -> Response:
+    response = await call_next(request)
+
+    if request.method == "GET" and 200 <= response.status_code < 300:
+        path = request.url.path
+        if path.startswith("/api/v1/genres"):
+            response.headers["Cache-Control"] = "public, max-age=600"
+        elif path.startswith("/api/v1/"):
+            response.headers["Cache-Control"] = "public, max-age=60"
+
+    return response
+
 
 app.include_router(health.router)
 app.include_router(genres.router)

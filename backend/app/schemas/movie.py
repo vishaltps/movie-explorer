@@ -8,6 +8,7 @@ from app.schemas.review import ReviewRead
 
 class MovieRead(BaseModel):
     """Compact view for movie lists — includes genres and director for card display."""
+
     model_config = ConfigDict(from_attributes=True)
 
     id: int
@@ -21,6 +22,7 @@ class MovieRead(BaseModel):
 
 class MovieDetail(MovieRead):
     """Full detail view — adds synopsis, runtime, cast, and reviews."""
+
     synopsis: str | None = None
     runtime_minutes: int | None = None
     actors: list[ActorRead] = []
@@ -35,9 +37,7 @@ class MovieFilters(BaseModel):
     year_min: int | None = Field(default=None, ge=1888, le=2100)
     year_max: int | None = Field(default=None, ge=1888, le=2100)
     search: str | None = Field(default=None, max_length=200)
-    sort: str | None = Field(
-        default=None, pattern=r"^-?(title|release_year|average_rating)$"
-    )
+    sort: str | None = Field(default=None, pattern=r"^-?(title|release_year|average_rating)$")
     page: int = Field(default=1, ge=1)
     page_size: int = Field(default=20, ge=1, le=100)
 

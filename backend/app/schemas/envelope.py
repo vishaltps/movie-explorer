@@ -1,4 +1,5 @@
 """Uniform response envelope used by every endpoint and exception handler."""
+
 from typing import Any, Generic, TypeVar
 
 from pydantic import BaseModel, ConfigDict

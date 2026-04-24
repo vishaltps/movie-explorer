@@ -1,4 +1,5 @@
 """Application settings loaded from environment via pydantic-settings."""
+
 from functools import lru_cache
 
 from pydantic import Field
@@ -10,7 +11,9 @@ class Settings(BaseSettings):
 
     env: str = Field(default="development")
     database_url: str = Field(default="sqlite:///./data/movies.db")
-    cors_origins: list[str] = Field(default_factory=lambda: ["http://localhost:5173", "http://localhost:8080"])
+    cors_origins: list[str] = Field(
+        default_factory=lambda: ["http://localhost:5173", "http://localhost:8080"]
+    )
     log_level: str = Field(default="INFO")
 
 

@@ -2,7 +2,6 @@ from sqlalchemy import Column, ForeignKey, Table
 
 from app.db import Base
 
-
 # Many-to-many: Movie ↔ Genre
 movie_genres = Table(
     "movie_genres",

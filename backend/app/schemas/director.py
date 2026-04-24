@@ -3,6 +3,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 class DirectorRead(BaseModel):
     """Compact view — embedded in movie list and movie detail."""
+
     model_config = ConfigDict(from_attributes=True)
 
     id: int
@@ -12,6 +13,7 @@ class DirectorRead(BaseModel):
 
 class DirectorDetail(DirectorRead):
     """Full view with bio. Returned on /directors/{id}."""
+
     bio: str | None = None
 
 

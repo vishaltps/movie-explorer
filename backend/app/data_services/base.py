@@ -1,4 +1,5 @@
 """Shared data-service helpers: pagination, sort whitelist, success envelope builder."""
+
 from typing import Any
 
 from sqlalchemy import Select, func, select
@@ -20,7 +21,12 @@ def paginate(
     total = int(db.scalar(count_stmt) or 0)
     items = list(db.scalars(stmt.limit(page_size).offset((page - 1) * page_size)).all())
     total_pages = (total + page_size - 1) // page_size if total else 0
-    return items, PaginationMeta(page=page, page_size=page_size, total=total, total_pages=total_pages)
+    return items, PaginationMeta(
+        page=page,
+        page_size=page_size,
+        total=total,
+        total_pages=total_pages,
+    )
 
 
 def ok(
@@ -54,4 +60,9 @@ class BaseService[T: Base]:
         total = int(db.scalar(count_stmt) or 0)
         rows = list(db.scalars(stmt.limit(page_size).offset((page - 1) * page_size)).all())
         total_pages = (total + page_size - 1) // page_size if total else 0
-        return rows, PaginationMeta(page=page, page_size=page_size, total=total, total_pages=total_pages)
+        return rows, PaginationMeta(
+            page=page,
+            page_size=page_size,
+            total=total,
+            total_pages=total_pages,
+        )

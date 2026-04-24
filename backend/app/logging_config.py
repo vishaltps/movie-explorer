@@ -1,4 +1,5 @@
 """Structured JSON logging via structlog. Single entry point: configure_logging()."""
+
 import logging
 import sys
 from typing import Any

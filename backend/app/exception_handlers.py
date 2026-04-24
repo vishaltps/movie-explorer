@@ -1,4 +1,5 @@
 """Four-layer exception handler chain. Every error becomes a uniform Envelope response."""
+
 import structlog
 from fastapi import Request
 from fastapi.exceptions import RequestValidationError
@@ -21,7 +22,7 @@ def _error_response(
     status_code: int,
     code: str,
     message: str,
-    details: dict | None = None,
+    details: dict[str, object] | None = None,
 ) -> JSONResponse:
     rid = _request_id(request)
     body = Envelope[None](

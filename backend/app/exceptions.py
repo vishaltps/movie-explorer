@@ -1,4 +1,5 @@
 """Domain exception hierarchy for consistent API error handling."""
+
 from typing import Any
 
 
@@ -16,17 +17,20 @@ class AppError(Exception):
 
 class NotFoundError(AppError):
     """Raised when a resource (Movie, Actor, etc.) is not found."""
+
     status_code = 404
     code = "not_found"
 
 
 class BadRequestError(AppError):
     """Raised for invalid input or failed business logic validation."""
+
     status_code = 400
     code = "bad_request"
 
 
 class ConflictError(AppError):
     """Raised when an operation conflicts with existing data."""
+
     status_code = 409
     code = "conflict"

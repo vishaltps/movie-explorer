@@ -1,4 +1,5 @@
 """SQLAlchemy engine, session factory, declarative Base, and FastAPI dependency."""
+
 from collections.abc import Generator
 from typing import Any
 

@@ -1,4 +1,5 @@
 """Actor endpoints."""
+
 from fastapi import APIRouter, Depends, Query, Request
 from sqlalchemy.orm import Session
 
@@ -20,17 +21,30 @@ def list_actors(
     db: Session = Depends(get_db),
 ) -> Envelope[list[ActorRead]]:
     items, pagination = service.list(db, filters)
-    return ok([ActorRead.model_validate(a) for a in items], pagination=pagination,
-              request_id=getattr(request.state, "request_id", None))
+    return ok(
+        [ActorRead.model_validate(a) for a in items],
+        pagination=pagination,
+        request_id=getattr(request.state, "request_id", None),
+    )
 
 
 @router.get("/{actor_id}", response_model=Envelope[ActorDetail], summary="Get actor by ID")
-def get_actor(actor_id: int, request: Request, db: Session = Depends(get_db)) -> Envelope[ActorDetail]:
-    return ok(ActorDetail.model_validate(service.get_by_id(db, actor_id)),
-              request_id=getattr(request.state, "request_id", None))
+def get_actor(
+    actor_id: int,
+    request: Request,
+    db: Session = Depends(get_db),
+) -> Envelope[ActorDetail]:
+    return ok(
+        ActorDetail.model_validate(service.get_by_id(db, actor_id)),
+        request_id=getattr(request.state, "request_id", None),
+    )
 
 
-@router.get("/{actor_id}/movies", response_model=Envelope[list[MovieRead]], summary="Movies by actor")
+@router.get(
+    "/{actor_id}/movies",
+    response_model=Envelope[list[MovieRead]],
+    summary="Movies by actor",
+)
 def list_actor_movies(
     actor_id: int,
     request: Request,
@@ -39,5 +53,8 @@ def list_actor_movies(
     db: Session = Depends(get_db),
 ) -> Envelope[list[MovieRead]]:
     items, pagination = service.get_actor_movies(db, actor_id, page, page_size)
-    return ok([MovieRead.model_validate(m) for m in items], pagination=pagination,
-              request_id=getattr(request.state, "request_id", None))
+    return ok(
+        [MovieRead.model_validate(m) for m in items],
+        pagination=pagination,
+        request_id=getattr(request.state, "request_id", None),
+    )

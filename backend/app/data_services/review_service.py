@@ -1,4 +1,5 @@
 """Review data service — read-only, scoped to a movie."""
+
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 

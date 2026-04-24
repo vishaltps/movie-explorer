@@ -3,6 +3,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 class ActorRead(BaseModel):
     """Compact view — used in lists and embedded in MovieDetail."""
+
     model_config = ConfigDict(from_attributes=True)
 
     id: int
@@ -12,6 +13,7 @@ class ActorRead(BaseModel):
 
 class ActorDetail(ActorRead):
     """Full view with bio."""
+
     bio: str | None = None
 
 
