@@ -1,107 +1,83 @@
-# l7-informatics
+# Movie Explorer
 
-Movie Explorer is a full-stack interview project with a FastAPI backend and a React + Vite frontend. The backend serves a read-only movie catalog with filtering and detail endpoints; the frontend consumes that API, keeps filters in the URL, and stores favorites locally.
+A full-stack movie catalog built with FastAPI and React. Browse and filter movies, actors, directors, and genres. Favorites are saved to local storage.
 
 ## Stack
 
-- Backend: FastAPI, SQLAlchemy, Alembic, SQLite, pytest
-- Frontend: React 18, TypeScript, Vite, React Router, TanStack Query, Tailwind CSS, Vitest, MSW
-- Tooling: `uv`, npm, Docker Compose, GitHub Actions
+- **Backend:** FastAPI, SQLAlchemy, Alembic, SQLite, pytest
+- **Frontend:** React 18, TypeScript, Vite, React Router, TanStack Query, Tailwind CSS, Vitest, MSW
+- **Tooling:** `uv`, npm, Docker Compose, GitHub Actions
 
-## Backend
+## Requirements
 
-### Requirements
+- [Docker](https://docs.docker.com/get-docker/) and Docker Compose (for the one-command setup)
+- Python 3.12+ and [uv](https://github.com/astral-sh/uv) (for local backend development)
+- Node.js 20+ and npm 10+ (for local frontend development)
 
-- Python 3.12+
-- [uv](https://github.com/astral-sh/uv)
+## Quick start with Docker
 
-### Setup
-
-```bash
-cd backend
-uv sync
-```
-
-### Run API
-
-```bash
-make dev
-```
-
-The API runs on `http://localhost:8000`, Swagger UI is at `http://localhost:8000/docs`, and OpenAPI JSON is at `http://localhost:8000/api/v1/openapi.json`.
-
-### Migrate + seed
-
-```bash
-make migrate
-make seed
-```
-
-### Test + lint
-
-```bash
-make lint
-make test
-```
-
-## Frontend
-
-### Requirements
-
-- Node.js 20+
-- npm 10+
-
-### Setup
-
-```bash
-cd frontend
-npm install
-```
-
-### Run app
-
-```bash
-npm run dev
-```
-
-The frontend dev server runs on `http://localhost:5173` by default. By default the app uses `/api/v1`, and the Vite dev server proxies that to `http://127.0.0.1:8000`, so you usually do not need to set `VITE_API_BASE_URL` for local development.
-
-### Frontend checks
-
-```bash
-npm run lint
-npm run test
-npm run build
-```
-
-### Regenerate API types
-
-The backend must be running locally before regenerating the frontend types.
-
-```bash
-cd backend
-uv run uvicorn app.main:app --host 127.0.0.1 --port 8000
-```
-
-In a second terminal:
-
-```bash
-cd frontend
-npm run gen:types
-```
-
-This updates [`frontend/src/shared/types/api-generated.ts`](./frontend/src/shared/types/api-generated.ts).
-
-## Full stack with Docker
+The fastest way to run the full stack — no local Python or Node setup required:
 
 ```bash
 docker compose up --build
 ```
 
-Services:
+| Service | URL |
+|---|---|
+| Frontend | http://localhost:8080 |
+| Backend API | http://localhost:8000 |
+| Swagger UI | http://localhost:8000/docs |
+| OpenAPI JSON | http://localhost:8000/api/v1/openapi.json |
 
-- Frontend: `http://localhost:8080`
-- Backend API: `http://localhost:8000`
-- API docs: `http://localhost:8000/docs`
+Migrations and seed data run automatically on first boot. The nginx frontend proxies `/api/v1/*` to the backend container, so no CORS configuration is needed.
 
-The compose setup runs migrations and seeds the SQLite database automatically before starting the API. The nginx frontend proxies `/api/v1/*` to the backend service, so the browser does not need to resolve the internal Docker hostname.
+## Backend (local development)
+
+```bash
+cd backend
+uv sync          # install dependencies
+make migrate     # run Alembic migrations
+make seed        # load curated seed data (40 movies, 17 genres, 53 actors)
+make dev         # start API on http://localhost:8000
+```
+
+### Test + lint
+
+```bash
+make lint        # ruff check + format + mypy
+make test        # pytest with 85% coverage gate
+```
+
+## Frontend (local development)
+
+Start the backend first (see above), then in a separate terminal:
+
+```bash
+cd frontend
+npm install      # install dependencies
+npm run dev      # start dev server on http://localhost:5173
+```
+
+The Vite dev server proxies `/api/v1/*` to `http://127.0.0.1:8000` automatically.
+
+### Checks
+
+```bash
+npm run lint     # eslint
+npm run test     # vitest with coverage
+npm run build    # tsc + vite build
+```
+
+### Regenerate API types
+
+The backend must be running before regenerating types from the OpenAPI spec:
+
+```bash
+# Terminal 1 — backend
+cd backend && make dev
+
+# Terminal 2 — regenerate
+cd frontend && npm run gen:types
+```
+
+This updates [`frontend/src/shared/types/api-generated.ts`](./frontend/src/shared/types/api-generated.ts). The CI workflow checks that committed types match the live spec on every push.
